@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="{% static 'js/base.js' %}"></script>  
+  <!--  <link rel="stylesheet" type="text/css" href="{% static 'styles/base.css' %}">  -->
+    <title>Document</title>
+</head>
+<body>
+    {% block content %}
+    {{message}}
+<div id="home">
+    <div>
+    <div class="searchSection">
+      <h1>Transform The Way of Learning</h1>
+      <p id="cThought">"You Dont Have To Be Great To Start,But Start To Be Great"</p>
+      <form action="/search"  class="searchForm" method="get">
+      <div id="searchBox">
+        <input type="text" id="search" name="search" placeholder="What Do You Want Learn?">
+        <img onclick="submitSearch()" src="{% static 'images/search.png' %}" alt="">
+      </div>
+    </form>
+    </div>
+    <div class="edu">
+      <img src="{% static 'images/edu.png' %}" alt="">
+    </div>
+    </div>
+  </div>
+    <div class="facilitysection">
+      <h2>Achieve your goals with Logic Venue</h2>
+      <hr>
+      <div class="facilitycontent">
+        <div class="improve">
+         <img src="{% static 'images/brain.png' %}" alt="">
+         <h4>Improve your basics</h4>
+         <p>Learn concept in-depth and master the topic</p>
+        </div>
+      
+      <div class="alltime">
+        <img src="{% static 'images/watch.png' %}" alt="">
+        <h4>Learn 24x7</h4>
+        <p>Our services are avaible  24x7.Study any topic, anytime. </p>
+      </div>
+      <div class="doubt">
+        <img src="{% static 'images/businessman-with-doubts-svgrepo-com.svg' %}" alt="">
+        <h4>Clear your doubts</h4>
+        <p>Doubt kills more dreams than failure ever will.Get your doubts cleared by our experts.</p>
+      </div>
+    </div>
+    </div>
+    <div class="course">
+      <img src="{% static 'images/courses_home.png' %}" alt="">
+      <div class="courseContent">
+        <h4>Take a look at our courses</h4>
+        <div class="flexline"></div>
+        <p> Education is the most powerful weapon which you can use to change the world. <strong> – Nelson Mandela</strong></p>
+        <button class="startteach" onclick="openNav()">Courses</button>
+      </div>
+    </div>
+    <script src="{% static 'js/home.js' %}"></script>  
+    <script src="{% static 'js/base.js' %}"></script>  
+    {% endblock%}
+    
+</body>
+</html>

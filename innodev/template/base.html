@@ -1,0 +1,288 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/home.css' %}">  
+    <script src="{% static 'js/home.js' %}"></script>  
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+    
+<div class="body">
+    <div class="mobile_Nav">
+      <span onclick="openMobileNav()" class="hamburger">&#9776;</span>
+      <a class="Mlogo" href="/"><img src="{% static 'images/cognedu.svg' %}" alt="">
+        <div>Cognedu</div>
+      </a>
+      <form action="/search" class="searchForm" method="get" id="searchBar">
+        <input type="search" name="search" id="search" placeholder="Search">
+      </form>
+    </div>
+    <div class="topnav" id="myTopnav">
+      <span onclick="closeMobileNav()" class="cross">&#x2718</span>
+      <!-- <div class="cline"></div> -->
+      <a href="/" class="logo">  <!-- <img  src="{% static 'images/cognedu.svg' %}" alt=""> -->
+       <span> Logic Venue</span></a>
+      <div class="dropside">
+        <button class="dropbtn" onclick="openNav()">Categories
+          <i class="fa fa-caret-down"></i>
+        </button>
+      </div>
+      <ul class="dropdown-content sidenav" id="mySidenav">
+        <a href="javascript:void(0)" class="closenav" onclick="closeNav()">&#8592;</a>
+        {% for courses in get_courses %}
+        <a class=" collapsible" onclick="category(this)" id="6">{{courses}}
+        </a>
+        <ul class="content ds6 ">
+          {% for subCat in sub_cat %}
+          {% if subCat.1 == courses %}
+          <li class="subitem" onclick="sub_category(this)">{{subCat.0}}</li>
+          <ul class="dropdown-content sidenav2" id="mySidenav{{subCat.0|cut:' '}}">
+            <a href="javascript:void(0)" class="closenav" onclick="closeNav2(this)">&#8592;</a>
+            <ul class="content2">
+              {% for subCat2 in sub_cat2 %}
+              {% if subCat2.0 == subCat.0 %}
+              <li class="subitem" onclick="sub_category2(this)">{{subCat2.1}}</li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </ul>
+          {% endif %}
+          {% endfor %}
+        </ul>
+        {% endfor %}
+  
+        <input type="hidden" name="get_cat" id="get_cat">
+        <input type="hidden" name="get_scat" id="get_scat">
+      </ul>
+  
+      {% if user.is_authenticated %}
+      <span id="uname">
+        {% if request.user.first_name == "Teacher" or request.user.is_superuser %}
+        <a href="/addCourse" class="role">Instructor</a>
+        {% else %}
+        <a  class="role"></a>
+        {% endif %}
+        <div class="userIcon">
+          <img src="{% static 'images/user1.png' %}" alt="">
+          <div class="userData">
+            <span id="name"><b>Hi! {{request.user}}</b></span>
+             {% if request.user.first_name == "Teacher" %}
+            <a style="color: teal;" href="/homeTutor"><p style="text-align: center; margin-top:30px; cursor: pointer;">Become Home Tutor</p>
+              <p style="text-align: center; margin-top: 10px; cursor: pointer;">Become one-one online tutor</p>
+  
+            </a>
+            {% else %}
+            <a style="color: teal;"><p  style="text-align: center; margin-top:30px; cursor: pointer;" onclick="window.location.href='#popup1'" >Hire Home Tutor</p> 
+              <p style="text-align: center; margin-top: 10px; cursor: pointer;"  onclick="window.location.href='#popup2'">Hire one-one online tutor</p>
+            </a>
+            {% endif %}
+            <button class="btn logout"><a class="logouta" onclick="clearStorage()" href="/logout">Logout</a></button>
+          </div>
+        </div>
+  
+      </span>
+      <div class="myCourses">
+        <p onclick="window.location.href='/myCourses'">MyCourses</p>
+        <div class="courses">
+  
+          {% if myCourses %}
+  
+          {% for courses in myCourses %}
+          <div class="item" onclick="window.location.href='/myCourses'">
+            <div class="myCoursesthumbnail">
+              <img src="/media/{{courses.0.courseThumbnail}}" alt=""></div>
+            <div class="myCoursesData">
+              <h1>{{courses.0.title|upper}}</h1>
+              <h1>{{courses.0.category}},{{courses.0.sub_category}}</h1>
+              <p>Start Learning</p>
+            </div>
+          </div>
+          {%  endfor %}
+  
+  
+          {% else %}
+          {% endif %}
+  
+        </div>
+      </div>
+      {% else %}
+      <!-- Button to trigger signup modal -->
+      <button id="signUp" class="btn btn-SignUp">Sign Up</button>
+      <!-- Button to trigger login modal -->
+      <button id="logIn" class="btn btn-Login">Log In</button>
+      <button class="btn btn-Teach"><a href="/teach1">Teach On Logic Venue</a></button>
+      {% endif %}
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+      <div class="mid2">
+        <form action="/search" class="searchForm" method="get" id="searchBar">
+          <input type="search" name="search" id="search" placeholder="Search">
+        </form>
+      </div>
+    </div>
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible" role="alert">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      {{message}}
+    </div>
+    {% endfor %}
+    <!--signUp The Modal -->
+    <div id="myModal" class="modal modal-signup">
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close closesignup">&times;</span>
+          <div class="Welcomesignup">
+            <img src="{% static 'images/signupAvatar.png' %}" alt="">
+            <h2>Student Signup</h2>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form action="/signup" method="POST">{% csrf_token %}
+            <div class="form-group">
+              <img src="{% static 'images/usernameicon.png' %}" alt="">
+              <label for="userName">User Name</label>
+              <input type="text" name="userName" id="userName" placeholder="Enter a Unique Username " required>
+            </div>
+            <div class="form-group">
+              <img src="{% static 'images/email.png' %}" alt="">
+              <label for="email">Email Id</label>
+              <input type="email" name="email" id="email" placeholder="Enter Your Email Id" required>
+            </div>
+            <div class="form-group">
+              <img src="{% static 'images/lockicon.png' %}" alt="">
+              <label for="password">Password</label>
+              <input type="password" name="password" id="password" placeholder="Enter Your Password" required>
+            </div>
+            <div class="form-group">
+              <img src="{% static 'images/lockicon.png' %}" alt="">
+              <label for="cpassword">Confirm Password</label>
+              <input type="password" name="cpassword" id="cpassword" placeholder="Confirm Password" required>
+            </div>
+            <button id="submitSignup" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!--login The Modal -->
+    <div id="myModal" class="modal modal-login" style ='display:none;'>
+      <div class="modal-content login_modal-content">
+        <div class="modal-header">
+          <span class="close closelogin">&times;</span>
+          <div class="welcomelogin">
+            <img src="{% static 'images/loginavataar.svg' %}" alt="">
+            <h2>Welcome Back</h2>
+          </div>
+        </div>
+        <div class="modal-body">
+          <form action="/login" method="POST">{% csrf_token %}
+            <div class="form-group">
+              <img src="{% static 'images/usernameicon.png' %}" alt="">
+              <label for="userName">User Name or email</label>
+              <input type="text" name="loginuserName" id="loginuserName" placeholder="Enter Your Username or email" required>
+            </div>
+            <div class="form-group">
+              <img src="{% static 'images/lockicon.png' %}" alt="">
+              <label for="password">Password</label>
+              <input type="password" name="loginpass" id="loginpass" placeholder="Enter Your Password" required>
+            </div>
+            <div class="login-btn">
+              <button id="submitLogin" class="logbutton" type="submit">Log In</button>
+            </div>
+            <div class="loginline"></div>
+            <div class="forgetpassword">
+              <a href="/reset_password">Forget password</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% if user.is_authenticated %}
+    <div id="cart" onclick="window.location.href='/cart'">
+      <div class="cartIcon">
+        <img src="{% static 'images/cartIcon.png' %}" alt=""><span class="count"></span></div>
+      <div class="cartItems arrow-top">
+  
+      </div>
+    </div>
+    {%  endif %}
+    <div id="popup1" class="overlay">
+      <div class="popup">
+        <form action="/get_homeTutor" method="get">
+        <div class="pin">
+        <input type="text" id="pin" name="pin" placeholder="Enter the pin code of your area">
+        <button type="submit" value=""><span>&#8594;</span></button>
+      </div></form>
+        <a class="close" href="#">&times;</a>
+      </div>
+    </div>
+    <div id="popup2" class="overlay">
+      <div class="popup">
+        <form action="/get_homeTutor" method="get">
+          <div class="select">
+            <select name="cat" id="cat">
+                <option value="0">Choose class</option>
+                <option value="6">Class 6</option>
+                <option value="7">Class 7</option>
+                <option value="8">Class 8</option>
+                <option value="9">Class 9</option>
+                <option value="10">Class 10</option>
+                <option value="11">Class 11</option>
+                <option value="12">Class 12</option>
+            </select>
+        </div>
+          <div class="select">
+            <select name="cat2"  id="cat2">
+                <option value="0">Choose subject</option>
+                <option value="Maths">Maths</option>
+                <option value="Physics">Physics</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Boilogy">Boilogy</option>
+                <option value="English">English</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Economics">Economics</option>
+            </select>
+        </div>
+        <input type="submit" class="proceed" value="Proceed">
+      </form>
+        <a class="close" href="#">&times;</a>
+       
+      </div>
+    </div>
+    {% block body %}
+  
+    {% endblock body %}
+  
+  </div>
+    <div id="lastElem">
+      <div class="innerlastelem">
+        <div class="footouter">
+      <div class="foot">
+        <div>
+          <ul class="footUl">
+            <li><b>Logic Venue</b></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="">Devlopers</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <ul class="footUl">
+            <li><b>More</b></li>
+            <li><a href="/terms">Terms</a></li>
+            <li><a href="/privacy">Privacy</a></li>
+          </ul>
+        </div>
+      </div>
+    
+       
+      </div>
+      </div>
+      <script src="{% static 'js/base.js' %}"></script>  
+      <script src="{% static 'js/home.js' %}"></script>
+</body>
+</html>
