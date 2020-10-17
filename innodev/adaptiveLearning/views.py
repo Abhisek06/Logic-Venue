@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.core.mail import EmailMessage
 
 # Create your views here.
 from adaptiveLearning.models import profile
@@ -14,25 +15,25 @@ def signup(request):
         return redirect("home")
     if request.method == "POST":
         userN = request.POST.get("userName", "")
-        pro = profile.objects.get(username=userN)
-        if pro is not None:
+        try:
+            pro = profile.objects.get(username=userN)
             messages.info(request, 'User Name Already Taken')
             return redirect("home")
-        email = request.POST.get("email", "")
-        passwor = request.POST.get("password", "")
-        cpasswor = request.POST.get("cpassword", "")
-
-        if passwor == cpasswor:
-            Profile = profile()
-            Profile.username = userN
-            Profile.email = email
-            Profile.password = passwor
-            Profile.save()
-            messages.info(request, 'Registration Successful!')
-            return redirect("home")
-        else:
-            messages.info(request, 'Password didn\'t Match')
-            return redirect("home")
+        except profile.DoesNotExist:
+            email = request.POST.get("email", "")
+            passwor = request.POST.get("password", "")
+            cpasswor = request.POST.get("cpassword", "")
+            if passwor == cpasswor:
+                Profile = profile()
+                Profile.username = userN
+                Profile.email = email
+                Profile.password = passwor
+                Profile.save()
+                messages.info(request, 'Registration Successful!')
+                return redirect("home")
+            else:
+                messages.info(request, 'Password didn\'t Match')
+                return redirect("home")
     return render(request, 'home.html')
 
 

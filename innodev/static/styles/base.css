@@ -482,6 +482,7 @@ body{
     }
     input[type=search] {
       -webkit-appearance: textfield;
+      box-sizing: 20;
       -webkit-box-sizing: content-box;
       font-family: inherit;
       font-size: 100%;
