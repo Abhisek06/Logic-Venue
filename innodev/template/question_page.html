@@ -1,0 +1,19 @@
+{% load static %}
+{% static "images" as baseUrl %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/submit" method="POST">{% csrf_token %}
+    <div class="form-group">
+        <img src="{{baseUrl}}/{{q.questions}}" alt="">
+        <input type="text" name="answ" id="loginpass" placeholder="Enter Your Answer" required>
+        <button id="submitAnswer" type="submit">Submit</button>
+    </div>
+    </form>
+</body>
+</html>

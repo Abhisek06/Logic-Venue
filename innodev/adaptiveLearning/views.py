@@ -3,11 +3,15 @@ from django.contrib import messages
 from django.core.mail import EmailMessage
 
 # Create your views here.
-from adaptiveLearning.models import profile
+from adaptiveLearning.models import profile, Addition
 
 
 def home(request):
     return render(request, 'home.html')
+
+
+def topics(request):
+    return render(request, 'topics.html')
 
 
 def signup(request):
@@ -43,11 +47,24 @@ def Login(request):
     if request.method == "POST":
         uname = request.POST.get("loginuserName", "")
         paswo = request.POST.get("loginpass", "")
-        pro = profile.objects.get(username=uname)
-        if pro.password == paswo:
-            messages.info(request, 'Log In Successful!')
-            return redirect("home")
-        else:
-            messages.info(request, 'Invalid Credentials!')
-            return redirect("home")
+        try:
+            pro = profile.objects.get(username=uname)
+            if pro.password == paswo:
+                messages.info(request, 'Log In Successful!')
+                return render(request, "topics.html")
+            else:
+                messages.info(request, 'Invalid Credentials!')
+                return redirect("home")
+        except profile.DoesNotExist:
+            messages.info(request, 'Sign Up first!')
+            return render(request, "home.html")
     return render(request, "home.html")
+
+
+def password_reset(request):
+    return render(request, 'password_reset.html')
+
+
+def addition(request):
+    qu = Addition.objects.get()
+    return render(request, 'question_page.html', {'q': qu[0]})
