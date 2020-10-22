@@ -9,4 +9,5 @@ urlpatterns = [
     path('login', views.Login, name='login'),
     path('password_reset', views.password_reset, name='password_reset'),
     path('addition', views.addition, name='addition'),
+    path('index', views.index, name='index'),
 ]

@@ -67,4 +67,8 @@ def password_reset(request):
 
 def addition(request):
     qu = Addition.objects.get()
-    return render(request, 'question_page.html', {'q': qu[0]})
+    return render(request, 'question_page.html', {'q': qu})
+
+
+def index(request):
+    return render(request, 'index.html')
